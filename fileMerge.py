@@ -24,7 +24,10 @@ colmn_select = base_db.columns.values.tolist()
 filenames = askopenfilenames(title='Select files to append')
 for this_file in filenames:
     print('Loading ...', this_file)
-    new_db = pd.read_csv(this_file, usecols = colmn_select, index_col= False)
+    new_db = pd.read_csv(this_file, index_col= False)
+    colmn_new = new_db.columns.values.tolist()
+    colmn_comb = list(set(colmn_new) & set(colmn_select))
+    new_db = new_db[colmn_comb]
     base_db = base_db.append(new_db)
 
 base_db.reset_index(drop=True, inplace=True)
@@ -41,4 +44,4 @@ while len(column_name)>0:
         column_entry = input ('Input default entry of the column: ')
         base_db[column_name] = column_entry
 
-base_db.to_csv(filename_save)
+base_db.to_csv(filename_save, index = False)
